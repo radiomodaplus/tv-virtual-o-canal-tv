@@ -8,14 +8,11 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background: #030712; color: #fff; height: 100vh; height: 100dvh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 
-        /* CONTENEDOR TIPO APP TV */
         .app-container { width: 100%; height: 100%; max-width: 480px; background: #0b0f19; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,0.9); border: 2px solid #1e293b; }
         @media (min-width: 481px) { .app-container { height: 92vh; border-radius: 24px; } }
 
-        /* HEADER TV */
         .tv-header { background: linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(11,15,25,0.8) 100%); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #334155; z-index: 10; backdrop-filter: blur(5px); }
         .channel-brand { display: flex; align-items: center; gap: 8px; }
-        /* Logo pequeño estilo canal de TV (Caracol/RCN) */
         .channel-logo-img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid #f59e0b; box-shadow: 0 0 8px rgba(245,158,11,0.6); background: #1e293b; }
         .channel-title-box h1 { font-size: 0.9rem; color: #f8fafc; font-weight: 800; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
         
@@ -25,7 +22,6 @@
         .btn-lightning { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: none; color: #fff; width: 34px; height: 34px; border-radius: 50%; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(59,130,246,0.5); transition: transform 0.2s; }
         .btn-lightning:active { transform: scale(0.9); }
 
-        /* AREA DE REPRODUCCIÓN */
         .player-viewport { flex: 1; background: #000; position: relative; display: flex; justify-content: center; align-items: center; }
         video { width: 100%; height: 100%; object-fit: contain; }
         
@@ -33,12 +29,10 @@
         .gate-logo { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #f59e0b; object-fit: cover; margin-bottom: 15px; box-shadow: 0 0 20px rgba(245,158,11,0.5); }
         .btn-big-play { background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; border: none; padding: 14px 35px; font-size: 1rem; font-weight: 900; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 20px rgba(245,158,11,0.5); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* CINTILLO INFERIOR (TICKER) */
         .ticker-container { background: #111827; color: #fbbf24; padding: 8px 0; border-top: 2px solid #f59e0b; font-size: 0.8rem; overflow: hidden; white-space: nowrap; font-weight: 600; }
         .ticker-content { display: inline-block; white-space: nowrap; animation: scroll-ticker 30s linear infinite; }
         @keyframes scroll-ticker { 0% { transform: translate3d(100%, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
 
-        /* MODAL PIN */
         .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; display: none; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(8px); }
         .modal-box { background: #1e293b; padding: 25px; border-radius: 16px; width: 100%; max-width: 300px; text-align: center; border: 1px solid #475569; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .modal-box h3 { color: #f59e0b; margin-bottom: 12px; font-size: 1.1rem; }
@@ -48,23 +42,28 @@
         .btn-modal-ok { background: #f59e0b; color: #000; }
         .btn-modal-cancel { background: #334155; color: #fff; }
 
-        /* PANEL DE CONTROL ADMINISTRATIVO PROFESIONAL */
+        /* PANEL ADMIN */
         .admin-dashboard { position: absolute; inset: 0; background: #090d16; z-index: 100; display: none; flex-direction: column; padding: 14px; overflow-y: auto; }
         .admin-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #1e293b; padding-bottom: 10px; }
-        .admin-top-bar h2 { color: #f59e0b; font-size: 1rem; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+        .admin-top-bar h2 { color: #f59e0b; font-size: 1rem; font-weight: 800; }
         .btn-exit-admin { background: #dc2626; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
 
-        .sec-label { font-size: 0.75rem; color: #94a3b8; margin: 10px 0 4px 0; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+        .sec-label { font-size: 0.75rem; color: #94a3b8; margin: 10px 0 4px 0; font-weight: bold; text-transform: uppercase; }
         .ctrl-group { margin-bottom: 8px; }
         .ctrl-group input, .ctrl-group textarea { width: 100%; padding: 8px 10px; background: #131b2e; border: 1px solid #334155; color: #fff; border-radius: 6px; font-size: 0.8rem; }
 
-        /* MONITOR AL AIRE EN ADMIN */
-        .onair-monitor { background: #131b2e; border: 1px solid #334155; border-radius: 8px; padding: 10px; margin-bottom: 10px; font-size: 0.75rem; }
-        .onair-monitor span { color: #10b981; font-weight: bold; }
+        /* MONITOR EN TIEMPO REAL Y BOTONES DE CONTROL */
+        .live-control-box { background: #131b2e; border: 1px solid #334155; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .status-text { font-size: 0.75rem; color: #cbd5e1; margin-bottom: 8px; }
+        .status-text span { color: #10b981; font-weight: bold; }
+        .media-btns-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+        .btn-ctrl { padding: 8px; border-radius: 6px; font-weight: bold; font-size: 0.75rem; border: none; cursor: pointer; color: #fff; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        .btn-play-action { background: #059669; }
+        .btn-pause-action { background: #d97706; }
+        .btn-next-action { background: #2563eb; }
 
-        /* GESTOR DE PLAYLIST */
-        .playlist-box { background: #131b2e; border-radius: 8px; padding: 8px; max-height: 160px; overflow-y: auto; border: 1px solid #334155; margin-bottom: 8px; }
-        .track-row { display: flex; align-items: center; justify-content: background; background: #090d16; padding: 6px 8px; border-radius: 6px; margin-bottom: 5px; font-size: 0.75rem; border: 1px solid #1e293b; gap: 6px; }
+        .playlist-box { background: #131b2e; border-radius: 8px; padding: 8px; max-height: 140px; overflow-y: auto; border: 1px solid #334155; margin-bottom: 8px; }
+        .track-row { display: flex; align-items: center; justify-content: space-between; background: #090d16; padding: 6px 8px; border-radius: 6px; margin-bottom: 5px; font-size: 0.75rem; border: 1px solid #1e293b; gap: 6px; }
         .track-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #e2e8f0; }
         .track-btns { display: flex; gap: 3px; }
         .track-btns button { background: #334155; color: #fff; border: none; width: 22px; height: 22px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; }
@@ -74,7 +73,6 @@
         .upload-row { display: flex; gap: 6px; margin-bottom: 8px; }
         .upload-row input[type="text"] { flex: 1; padding: 7px; background: #131b2e; border: 1px solid #334155; color: #fff; border-radius: 6px; font-size: 0.75rem; }
         .btn-action-blue { background: #2563eb; color: white; border: none; padding: 0 10px; border-radius: 6px; font-weight: bold; font-size: 0.75rem; cursor: pointer; }
-        .btn-action-green { background: #059669; color: white; border: none; padding: 7px; border-radius: 6px; font-weight: bold; font-size: 0.75rem; cursor: pointer; width: 100%; text-align: center; display: block; }
         
         .admin-footer-btns { display: flex; gap: 8px; margin-top: 10px; }
         .btn-save-cfg { background: #10b981; color: white; flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
@@ -84,7 +82,6 @@
 <body>
 
     <div class="app-container">
-        <!-- CABECERA TIPO TV -->
         <header class="tv-header">
             <div class="channel-brand">
                 <img id="headerLogo" src="" alt="Logo" class="channel-logo-img">
@@ -96,7 +93,6 @@
             <button class="btn-lightning" onclick="openPinModal()" title="Panel Secreto">⚡</button>
         </header>
 
-        <!-- REPRODUCTOR DE VIDEO -->
         <div class="player-viewport">
             <div class="play-gate" id="playGate">
                 <img id="gateLogo" src="" alt="Logo" class="gate-logo">
@@ -106,13 +102,12 @@
             <video id="mainVideoPlayer" playsinline controls></video>
         </div>
 
-        <!-- CINTILLO INFERIOR -->
         <div class="ticker-container">
             <div class="ticker-content" id="headerTicker">Bienvenidos a ZonaCafeteraTv. Disfruta de la mejor programación en vivo y en directo desde la nube. ☕📺</div>
         </div>
     </div>
 
-    <!-- MODAL DE ACCESO PIN -->
+    <!-- MODAL PIN -->
     <div class="modal-overlay" id="pinModalOverlay">
         <div class="modal-box">
             <h3>Acceso Restringido</h3>
@@ -124,15 +119,21 @@
         </div>
     </div>
 
-    <!-- PANEL DE CONTROL ADMINISTRATIVO -->
+    <!-- PANEL ADMIN CON CONTROLES EN TIEMPO REAL -->
     <div class="admin-dashboard" id="adminDashboardPanel">
         <div class="admin-top-bar">
             <h2>⚡ Panel Control ZonaCafeteraTv</h2>
             <button class="btn-exit-admin" onclick="closeAdminPanel()">Cerrar Sesión</button>
         </div>
 
-        <div class="onair-monitor">
-            Monitor Actual: <span id="monitorStatus">Reproduciendo en orden automático</span>
+        <!-- MONITOR Y BOTONES AL AIRE -->
+        <div class="live-control-box">
+            <div class="status-text">Estado: <span id="monitorStatus">Detenido / En espera</span></div>
+            <div class="media-btns-grid">
+                <button class="btn-ctrl btn-play-action" onclick="adminPlay()">▶ Reproducir</button>
+                <button class="btn-ctrl btn-pause-action" onclick="adminPause()">⏸ Pausar</button>
+                <button class="btn-ctrl btn-next-action" onclick="adminNext()">⏭ Siguiente</button>
+            </div>
         </div>
 
         <div class="ctrl-group">
@@ -150,10 +151,10 @@
             <textarea id="cfgTicker" rows="2"></textarea>
         </div>
 
-        <div class="sec-label">Parrilla de Programación (Lista de Reproducción)</div>
+        <div class="sec-label">Parrilla de Programación (Bucle Infinito)</div>
         
         <div class="upload-row">
-            <input type="text" id="newMediaUrl" placeholder="Pegar enlace directo (.mp4 de Cloudflare R2)">
+            <input type="text" id="newMediaUrl" placeholder="Pegar enlace directo (.mp4)">
             <button class="btn-action-blue" onclick="addMediaUrl()">+ URL</button>
         </div>
 
@@ -164,9 +165,7 @@
             </label>
         </div>
 
-        <div class="playlist-box" id="playlistItemsContainer">
-            <!-- Se cargan dinámicamente -->
-        </div>
+        <div class="playlist-box" id="playlistItemsContainer"></div>
 
         <div class="admin-footer-btns">
             <button class="btn-cancel-cfg" onclick="closeAdminPanel()">Cancelar</button>
@@ -175,14 +174,13 @@
     </div>
 
     <script>
-        // Logo profesional por defecto integrado de alta calidad
         const DEFAULT_LOGO = "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=150&auto=format&fit=crop&q=80";
         const DEFAULT_PLAYLIST = [
             "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
             "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
         ];
 
-        let config = JSON.parse(localStorage.getItem('zonacafetera_tv_v2')) || {
+        let config = JSON.parse(localStorage.getItem('zonacafetera_tv_v3')) || {
             name: "ZonaCafeteraTv",
             logo: DEFAULT_LOGO,
             ticker: "Bienvenidos a ZonaCafeteraTv. Disfruta de la mejor programación en vivo y en directo desde la nube. ☕📺",
@@ -193,6 +191,7 @@
 
         window.onload = function() {
             applyChannelConfig();
+            setupPlayerEvents();
         };
 
         function applyChannelConfig() {
@@ -202,11 +201,24 @@
             document.getElementById('gateLogo').src = config.logo;
             document.getElementById('headerTicker').innerText = config.ticker;
 
-            // Llenar formulario admin
             document.getElementById('cfgName').value = config.name;
             document.getElementById('cfgLogo').value = config.logo;
             document.getElementById('cfgTicker').value = config.ticker;
             renderPlaylistManager();
+        }
+
+        function setupPlayerEvents() {
+            const player = document.getElementById('mainVideoPlayer');
+            
+            // Bucle automático al finalizar cada pista (pasa a la siguiente o vuelve al inicio)
+            player.onended = function() {
+                if (config.playlist.length > 0) {
+                    currentPlayingIndex = (currentPlayingIndex + 1) % config.playlist.length;
+                    player.src = config.playlist[currentPlayingIndex];
+                    player.play();
+                    updateMonitor(`Reproduciendo pista ${currentPlayingIndex + 1} de ${config.playlist.length}`);
+                }
+            };
         }
 
         function startChannelStream() {
@@ -215,24 +227,50 @@
                 player.src = config.playlist[currentPlayingIndex];
                 player.play().then(() => {
                     document.getElementById('playGate').style.display = 'none';
+                    updateMonitor(`Al aire: Pista ${currentPlayingIndex + 1}`);
                 }).catch(e => {
-                    alert("Toca reproducir en los controles del video si el navegador bloquea el inicio.");
+                    alert("Toca play en los controles del video si el navegador bloquea el autoplay.");
                     document.getElementById('playGate').style.display = 'none';
                 });
-
-                // Secuencia continua automática al terminar cada pista
-                player.onended = function() {
-                    currentPlayingIndex = (currentPlayingIndex + 1) % config.playlist.length;
-                    player.src = config.playlist[currentPlayingIndex];
-                    player.play();
-                    document.getElementById('monitorStatus').innerText = `Reproduciendo pista ${currentPlayingIndex + 1} de ${config.playlist.length}`;
-                };
             } else {
-                alert("No hay pistas cargadas en la parrilla de programación.");
+                alert("No hay pistas cargadas en la parrilla.");
             }
         }
 
-        // CONTROL DE PIN SEGURO
+        // CONTROLADORES DIRECTOS DESDE EL PANEL ADMIN
+        function adminPlay() {
+            const player = document.getElementById('mainVideoPlayer');
+            if (!player.src && config.playlist.length > 0) {
+                player.src = config.playlist[currentPlayingIndex];
+            }
+            player.play().then(() => {
+                document.getElementById('playGate').style.display = 'none';
+                updateMonitor(`Reproduciendo pista ${currentPlayingIndex + 1}`);
+            });
+        }
+
+        function adminPause() {
+            const player = document.getElementById('mainVideoPlayer');
+            player.pause();
+            updateMonitor("Transmisión en pausa");
+        }
+
+        function adminNext() {
+            const player = document.getElementById('mainVideoPlayer');
+            if (config.playlist.length > 0) {
+                currentPlayingIndex = (currentPlayingIndex + 1) % config.playlist.length;
+                player.src = config.playlist[currentPlayingIndex];
+                player.play();
+                updateMonitor(`Saltó a pista ${currentPlayingIndex + 1}`);
+            }
+        }
+
+        function updateMonitor(text) {
+            const monitor = document.getElementById('monitorStatus');
+            if (monitor) monitor.innerText = text;
+        }
+
+        // MODAL PIN
         function openPinModal() {
             document.getElementById('pinCodeInput').value = '';
             document.getElementById('pinModalOverlay').style.display = 'flex';
@@ -251,7 +289,7 @@
             }
         }
 
-        // GESTOR DE PLAYLIST Y ORDEN
+        // GESTOR DE PLAYLIST
         function renderPlaylistManager() {
             const container = document.getElementById('playlistItemsContainer');
             container.innerHTML = '';
@@ -264,7 +302,6 @@
             config.playlist.forEach((item, index) => {
                 let row = document.createElement('div');
                 row.className = 'track-row';
-                
                 let displayName = item.startsWith('blob:') ? `[Archivo Local] Pista ${index + 1}` : item;
 
                 row.innerHTML = `
@@ -297,7 +334,7 @@
                 const localUrl = URL.createObjectURL(file);
                 config.playlist.push(localUrl);
                 renderPlaylistManager();
-                alert(`¡Archivo "${file.name}" cargado con éxito a la lista!`);
+                alert(`¡Archivo "${file.name}" cargado a la lista!`);
             }
         }
 
@@ -321,10 +358,10 @@
             config.logo = document.getElementById('cfgLogo').value || DEFAULT_LOGO;
             config.ticker = document.getElementById('cfgTicker').value;
 
-            localStorage.setItem('zonacafetera_tv_v2', JSON.stringify(config));
+            localStorage.setItem('zonacafetera_tv_v3', JSON.stringify(config));
             applyChannelConfig();
             document.getElementById('adminDashboardPanel').style.display = 'none';
-            alert("¡Cambios aplicados correctamente! La señal continúa al aire.");
+            alert("¡Cambios guardados con éxito! La señal sigue activa al aire.");
         }
 
         function closeAdminPanel() {
