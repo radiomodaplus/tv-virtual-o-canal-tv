@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>TV VIRTUAL DIGITAL - NUBE R2</title>
+
+  <style>
+    :root {
+      --bg: #030712;
+      --card-bg: #0b1329;
+      --border: #1e3a6d;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --c-green: #10b981;
+      --c-blue: #06b6d4;
+      --c-red: #ef4444;
+      --c-gold: #fbbf24;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 6px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+
+    /* CONTENEDOR ESTILO APP MÓVIL */
+    .app-container {
+      width: 100%; max-width: 420px; background: #070c1b; border: 1px solid var(--border);
+      border-radius: 16px; padding: 10px; display: flex; flex-direction: column; gap: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    }
+
+    /* BARRA SUPERIOR TV */
+    .tv-header {
+      display: flex; justify-content: space-between; align-items: center;
+      background: linear-gradient(90deg, #1e1b4b, #0f172a); padding: 8px 12px;
+      border-radius: 10px; border: 1px solid #4338ca;
+    }
+    .tv-title { font-size: 0.88rem; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 5px; }
+    .tv-live-badge { background: var(--c-red); color: #fff; font-size: 0.6rem; font-weight: 900; padding: 2px 6px; border-radius: 4px; animation: pulseLive 1.2s infinite alternate; }
+    @keyframes pulseLive { 0% { opacity: 1; } 100% { opacity: 0.5; } }
+
+    /* PANTALLA VISTA PREVIA TV (VIDEO) */
+    .tv-screen-box {
+      width: 100%; aspect-ratio: 16/9; background: #000; border: 2px solid var(--border);
+      border-radius: 10px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    #virtualTvPlayer { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .tv-overlay-info {
+      position: absolute; bottom: 6px; left: 6px; right: 6px; background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; color: #fff;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    /* PANEL DE CONTROL */
+    .control-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+    .section-label { font-size: 0.65rem; font-weight: 900; color: var(--text-muted); text-transform: uppercase; }
+
+    .btn-action {
+      width: 100%; padding: 10px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.75rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; color: #fff; text-align: center;
+    }
+    .btn-cloud { background: linear-gradient(135deg, #0284c7, #0369a1); border: 1px solid #38bdf8; }
+    .btn-local { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+
+    /* LISTA DE REPRODUCCIÓN EN VIVO */
+    .playlist-container { max-height: 140px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+    .playlist-item {
+      background: #101935; border: 1px solid #1e3a6d; border-radius: 6px; padding: 6px 8px;
+      font-size: 0.7rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+    }
+    .playlist-item.active { border-color: var(--c-green); background: #064e3b33; font-weight: bold; }
+
+    /* MODALES */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center; z-index: 1000; padding: 12px;
+    }
+    .modal-box {
+      background: #0c1427; border: 1px solid #3b82f6; border-radius: 14px;
+      width: 100%; max-width: 385px; padding: 12px; display: flex; flex-direction: column; gap: 8px;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 3px; }
+    .form-group label { font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+    .form-group input { width: 100%; padding: 8px; background: #030712; border: 1px solid var(--border); border-radius: 6px; color: #fff; font-size: 0.8rem; outline: none; }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- BARRA SUPERIOR -->
+    <div class="tv-header">
+      <div class="tv-title">📺 <span>TV DIGITAL VIRTUAL</span></div>
+      <div class="tv-live-badge">EN VIVO</div>
+    </div>
+
+    <!-- PANTALLA VISTA PREVIA (TV VIRTUAL) -->
+    <div class="tv-screen-box">
+      <video id="virtualTvPlayer" autoplay playsinline controls></video>
+      <div class="tv-overlay-info">
+        <span id="currentTvTitle">Sin señal en línea</span>
+        <span id="tvTimer">0:00 / 0:00</span>
+      </div>
+    </div>
+
+    <!-- PANEL DE CONTROL Y ACCIÓN -->
+    <div class="control-card">
+      <div class="section-label">Gestión de Contenido en la Nube R2</div>
+      
+      <button class="btn-action btn-cloud" onclick="openCloudModal()">
+        ☁️ AGREGAR DESDE CLOUDFLARE R2 (10 GB)
+      </button>
+
+      <div style="position: relative; overflow: hidden;">
+        <button class="btn-action btn-local">📂 CARGAR VIDEO O AUDIO LOCAL</button>
+        <input type="file" multiple accept="audio/*, video/*" onchange="handleLocalFiles(event)" style="position: absolute; inset:0; opacity:0; cursor:pointer;">
+      </div>
+    </div>
+
+    <!-- LISTA DE PROGRAMACIÓN (PROGRAMA ACTUAL) -->
+    <div class="control-card">
+      <div class="section-label">Parrilla de Programación en Cola</div>
+      <div class="playlist-container" id="tvPlaylistContainer">
+        <div style="color:var(--text-muted); font-size:0.68rem; text-align:center; padding:10px;">Agrega videos para iniciar la señal de TV.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PARA AGREGAR DESDE CLOUDFLARE R2 -->
+  <div class="modal-overlay" id="cloudModal">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:6px;">
+        <span style="font-size:0.82rem; font-weight:900; color:var(--c-blue);">☁️ NUEVO VIDEO DESDE R2</span>
+        <button onclick="closeCloudModal()" style="background:none; border:none; color:#fff; font-size:1rem; cursor:pointer;">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label>Nombre del Programa / Video</label>
+        <input type="text" id="r2VideoName" placeholder="Ej: Video Clip Musical">
+      </div>
+
+      <div class="form-group">
+        <label>Enlace Público R2 (.mp4 o .mp3)</label>
+        <input type="text" id="r2VideoUrl" placeholder="https://pub-d5a4e9...r2.dev/video.mp4">
+      </div>
+
+      <button class="btn-action" style="background:var(--c-green); margin-top:4px;" onclick="addVideoFromCloud()">
+        AGREGAR A LA PARRILLA DE TV
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let tvPlaylist = [];
+    let currentTvIndex = 0;
+    const player = document.getElementById('virtualTvPlayer');
+
+    function openCloudModal() { document.getElementById('cloudModal').style.display = 'flex'; }
+    function closeCloudModal() { document.getElementById('cloudModal').style.display = 'none'; }
+
+    function addVideoFromCloud() {
+      const name = document.getElementById('r2VideoName').value.trim();
+      const url = document.getElementById('r2VideoUrl').value.trim();
+
+      if (!name || !url) {
+        alert("Completa el nombre y el enlace directo de Cloudflare R2.");
+        return;
+      }
+
+      tvPlaylist.push({ name, url, isRemote: true });
+      document.getElementById('r2VideoName').value = '';
+      document.getElementById('r2VideoUrl').value = '';
+      closeCloudModal();
+      renderTvPlaylist();
+
+      if (tvPlaylist.length === 1 && player.paused) {
+        playTvIndex(0);
+      }
+    }
+
+    function handleLocalFiles(e) {
+      const files = Array.from(e.target.files);
+      if (files.length === 0) return;
+
+      files.forEach(file => {
+        tvPlaylist.push({
+          name: file.name,
+          url: URL.createObjectURL(file),
+          isRemote: false
+        });
+      });
+
+      renderTvPlaylist();
+      if (tvPlaylist.length === files.length && player.paused) {
+        playTvIndex(0);
+      }
+    }
+
+    function playTvIndex(idx) {
+      if (tvPlaylist.length === 0 || !tvPlaylist[idx]) return;
+      currentTvIndex = idx;
+      const item = tvPlaylist[idx];
+
+      player.src = item.url;
+      player.load();
+      player.play().catch(e => console.log(e));
+
+      document.getElementById('currentTvTitle').innerText = `${idx + 1}. ${item.name}`;
+      renderTvPlaylist();
+    }
+
+    player.onended = () => {
+      currentTvIndex = (currentTvIndex + 1) % tvPlaylist.length;
+      playTvIndex(currentTvIndex);
+    };
+
+    player.ontimeupdate = () => {
+      if (!isNaN(player.duration)) {
+        const c = Math.floor(player.currentTime);
+        const d = Math.floor(player.duration);
+        const cM = Math.floor(c / 60), cS = (c % 60).toString().padStart(2, '0');
+        const dM = Math.floor(d / 60), dS = (d % 60).toString().padStart(2, '0');
+        document.getElementById('tvTimer').innerText = `${cM}:${cS} / ${dM}:${dS}`;
+      }
+    };
+
+    function renderTvPlaylist() {
+      const container = document.getElementById('tvPlaylistContainer');
+      container.innerHTML = '';
+
+      if (tvPlaylist.length === 0) {
+        container.innerHTML = '<div style="color:var(--text-muted); font-size:0.68rem; text-align:center; padding:10px;">Sin programación en parrilla.</div>';
+        return;
+      }
+
+      tvPlaylist.forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = idx === currentTvIndex ? 'playlist-item active' : 'playlist-item';
+        div.innerHTML = `<span>${idx + 1}. ${item.name}</span> <small>${item.isRemote ? '☁️ Nube' : '💻 Local'}</small>`;
+        div.onclick = () => playTvIndex(idx);
+        container.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
