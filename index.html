@@ -3,295 +3,332 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZonaCafeteraTv App</title>
+    <title>ZonaCafeteraTv - En Vivo</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background: #000; color: #fff; height: 100vh; height: 100dvh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        body { background: #030712; color: #fff; height: 100vh; height: 100dvh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 
-        /* CONTENEDOR TIPO APP MÓVIL */
-        .app-container { width: 100%; height: 100%; max-width: 480px; background: #0b0f19; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
-        @media (min-width: 481px) { .app-container { height: 92vh; border-radius: 30px; border: 4px solid #1f293d; } }
+        /* CONTENEDOR TIPO APP TV */
+        .app-container { width: 100%; height: 100%; max-width: 480px; background: #0b0f19; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,0.9); border: 2px solid #1e293b; }
+        @media (min-width: 481px) { .app-container { height: 92vh; border-radius: 24px; } }
 
-        /* HEADER */
-        .app-header { background: rgba(11, 15, 25, 0.95); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f293d; z-index: 10; }
-        .channel-info { display: flex; align-items: center; gap: 10px; }
-        .channel-logo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #ffaa00; }
-        .channel-text h1 { font-size: 0.95rem; color: #ffaa00; font-weight: bold; }
-        .live-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 0.65rem; background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
-        .live-dot { width: 6px; height: 6px; background: #ef4444; border-radius: 50%; animation: pulse 1.5px infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        /* HEADER TV */
+        .tv-header { background: linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(11,15,25,0.8) 100%); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #334155; z-index: 10; backdrop-filter: blur(5px); }
+        .channel-brand { display: flex; align-items: center; gap: 8px; }
+        /* Logo pequeño estilo canal de TV (Caracol/RCN) */
+        .channel-logo-img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid #f59e0b; box-shadow: 0 0 8px rgba(245,158,11,0.6); background: #1e293b; }
+        .channel-title-box h1 { font-size: 0.9rem; color: #f8fafc; font-weight: 800; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+        
+        .live-tag { display: inline-flex; align-items: center; gap: 3px; font-size: 0.55rem; background: #dc2626; color: #fff; padding: 1px 5px; border-radius: 3px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; animation: pulse-live 1.5s infinite; }
+        @keyframes pulse-live { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        .btn-icon { background: none; border: none; color: #94a3b8; font-size: 1.3rem; cursor: pointer; padding: 4px; transition: color 0.2s; }
-        .btn-icon:hover { color: #ffaa00; }
+        .btn-lightning { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: none; color: #fff; width: 34px; height: 34px; border-radius: 50%; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(59,130,246,0.5); transition: transform 0.2s; }
+        .btn-lightning:active { transform: scale(0.9); }
 
-        /* REPRODUCTOR */
-        .player-box { flex: 1; background: #000; position: relative; display: flex; justify-content: center; align-items: center; }
+        /* AREA DE REPRODUCCIÓN */
+        .player-viewport { flex: 1; background: #000; position: relative; display: flex; justify-content: center; align-items: center; }
         video { width: 100%; height: 100%; object-fit: contain; }
         
-        .overlay-play { position: absolute; inset: 0; background: rgba(0,0,0,0.75); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 5; }
-        .btn-play-big { background: #ffaa00; color: #000; border: none; padding: 14px 32px; font-size: 1.1rem; font-weight: bold; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(255,170,0,0.4); }
+        .play-gate { position: absolute; inset: 0; background: radial-gradient(circle, rgba(15,23,42,0.9) 0%, rgba(3,7,18,0.95) 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 5; padding: 20px; text-align: center; }
+        .gate-logo { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #f59e0b; object-fit: cover; margin-bottom: 15px; box-shadow: 0 0 20px rgba(245,158,11,0.5); }
+        .btn-big-play { background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; border: none; padding: 14px 35px; font-size: 1rem; font-weight: 900; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 20px rgba(245,158,11,0.5); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* CINTILLO */
-        .ticker-bar { background: #111827; color: #e2e8f0; padding: 8px 0; border-top: 2px solid #ffaa00; font-size: 0.85rem; overflow: hidden; white-space: nowrap; }
-        .ticker-text { display: inline-block; white-space: nowrap; animation: scroll-ticker 25s linear infinite; }
+        /* CINTILLO INFERIOR (TICKER) */
+        .ticker-container { background: #111827; color: #fbbf24; padding: 8px 0; border-top: 2px solid #f59e0b; font-size: 0.8rem; overflow: hidden; white-space: nowrap; font-weight: 600; }
+        .ticker-content { display: inline-block; white-space: nowrap; animation: scroll-ticker 30s linear infinite; }
         @keyframes scroll-ticker { 0% { transform: translate3d(100%, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
 
         /* MODAL PIN */
-        .modal-screen { position: absolute; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; display: none; justify-content: center; align-items: center; padding: 20px; }
-        .modal-card { background: #1e293b; padding: 25px; border-radius: 16px; width: 100%; max-width: 300px; text-align: center; border: 1px solid #334155; }
-        .modal-card h3 { color: #ffaa00; margin-bottom: 15px; font-size: 1.1rem; }
-        .modal-card input { width: 100%; padding: 12px; text-align: center; font-size: 1.4rem; letter-spacing: 6px; background: #0f172a; border: 1px solid #475569; color: #fff; border-radius: 8px; margin-bottom: 15px; }
-        .modal-btns { display: flex; gap: 10px; }
-        .modal-btns button { flex: 1; padding: 10px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; }
-        .btn-confirm { background: #ffaa00; color: #000; }
-        .btn-close-modal { background: #334155; color: #fff; }
+        .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; display: none; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(8px); }
+        .modal-box { background: #1e293b; padding: 25px; border-radius: 16px; width: 100%; max-width: 300px; text-align: center; border: 1px solid #475569; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .modal-box h3 { color: #f59e0b; margin-bottom: 12px; font-size: 1.1rem; }
+        .modal-box input { width: 100%; padding: 12px; text-align: center; font-size: 1.5rem; letter-spacing: 8px; background: #0f172a; border: 1px solid #64748b; color: #fff; border-radius: 8px; margin-bottom: 15px; outline: none; }
+        .modal-actions { display: flex; gap: 10px; }
+        .modal-actions button { flex: 1; padding: 10px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; }
+        .btn-modal-ok { background: #f59e0b; color: #000; }
+        .btn-modal-cancel { background: #334155; color: #fff; }
 
-        /* PANEL DE CONTROL (ADMIN) */
-        .admin-screen { position: absolute; inset: 0; background: #0f172a; z-index: 100; display: none; flex-direction: column; padding: 16px; overflow-y: auto; }
-        .admin-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
-        .admin-top h2 { color: #ffaa00; font-size: 1.1rem; }
-        .btn-logout { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
+        /* PANEL DE CONTROL ADMINISTRATIVO PROFESIONAL */
+        .admin-dashboard { position: absolute; inset: 0; background: #090d16; z-index: 100; display: none; flex-direction: column; padding: 14px; overflow-y: auto; }
+        .admin-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #1e293b; padding-bottom: 10px; }
+        .admin-top-bar h2 { color: #f59e0b; font-size: 1rem; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+        .btn-exit-admin { background: #dc2626; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
 
-        .sec-title { font-size: 0.85rem; color: #94a3b8; margin: 12px 0 6px 0; font-weight: bold; text-transform: uppercase; }
-        .f-group { margin-bottom: 10px; }
-        .f-group label { display: block; font-size: 0.75rem; color: #cbd5e1; margin-bottom: 3px; }
-        .f-group input, .f-group textarea { width: 100%; padding: 9px; background: #1e293b; border: 1px solid #334155; color: #fff; border-radius: 6px; font-size: 0.85rem; }
+        .sec-label { font-size: 0.75rem; color: #94a3b8; margin: 10px 0 4px 0; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+        .ctrl-group { margin-bottom: 8px; }
+        .ctrl-group input, .ctrl-group textarea { width: 100%; padding: 8px 10px; background: #131b2e; border: 1px solid #334155; color: #fff; border-radius: 6px; font-size: 0.8rem; }
 
-        /* LISTA DE PISTAS (PLAYLIST) */
-        .playlist-admin { background: #1e293b; border-radius: 8px; padding: 10px; max-height: 180px; overflow-y: auto; border: 1px solid #334155; margin-bottom: 10px; }
-        .track-item { display: flex; align-items: center; justify-content: space-between; background: #0f172a; padding: 8px; border-radius: 6px; margin-bottom: 6px; font-size: 0.8rem; border: 1px solid #334155; }
-        .track-info { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; margin-right: 8px; }
-        .track-controls { display: flex; gap: 4px; }
-        .track-controls button { background: #334155; color: #fff; border: none; width: 26px; height: 26px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; }
-        .track-controls button:hover { background: #ffaa00; color: #000; }
-        .btn-del { background: #7f1d1d !important; }
+        /* MONITOR AL AIRE EN ADMIN */
+        .onair-monitor { background: #131b2e; border: 1px solid #334155; border-radius: 8px; padding: 10px; margin-bottom: 10px; font-size: 0.75rem; }
+        .onair-monitor span { color: #10b981; font-weight: bold; }
 
-        .add-track-box { display: flex; gap: 6px; margin-bottom: 15px; }
-        .add-track-box input { flex: 1; padding: 8px; background: #1e293b; border: 1px solid #334155; color: #fff; border-radius: 6px; font-size: 0.8rem; }
-        .btn-add { background: #0284c7; color: white; border: none; padding: 0 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        /* GESTOR DE PLAYLIST */
+        .playlist-box { background: #131b2e; border-radius: 8px; padding: 8px; max-height: 160px; overflow-y: auto; border: 1px solid #334155; margin-bottom: 8px; }
+        .track-row { display: flex; align-items: center; justify-content: background; background: #090d16; padding: 6px 8px; border-radius: 6px; margin-bottom: 5px; font-size: 0.75rem; border: 1px solid #1e293b; gap: 6px; }
+        .track-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #e2e8f0; }
+        .track-btns { display: flex; gap: 3px; }
+        .track-btns button { background: #334155; color: #fff; border: none; width: 22px; height: 22px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; }
+        .track-btns button:hover { background: #f59e0b; color: #000; }
+        .btn-remove { background: #7f1d1d !important; }
 
-        .admin-actions { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-save-admin { background: #10b981; color: white; flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .btn-cancel-admin { background: #475569; color: white; flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .upload-row { display: flex; gap: 6px; margin-bottom: 8px; }
+        .upload-row input[type="text"] { flex: 1; padding: 7px; background: #131b2e; border: 1px solid #334155; color: #fff; border-radius: 6px; font-size: 0.75rem; }
+        .btn-action-blue { background: #2563eb; color: white; border: none; padding: 0 10px; border-radius: 6px; font-weight: bold; font-size: 0.75rem; cursor: pointer; }
+        .btn-action-green { background: #059669; color: white; border: none; padding: 7px; border-radius: 6px; font-weight: bold; font-size: 0.75rem; cursor: pointer; width: 100%; text-align: center; display: block; }
+        
+        .admin-footer-btns { display: flex; gap: 8px; margin-top: 10px; }
+        .btn-save-cfg { background: #10b981; color: white; flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .btn-cancel-cfg { background: #475569; color: white; flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        <!-- HEADER APP -->
-        <header class="app-header">
-            <div class="channel-info">
-                <img id="viewLogo" src="https://via.placeholder.com/36" alt="Logo" class="channel-logo">
-                <div>
-                    <h1 id="viewName">ZonaCafeteraTv</h1>
-                    <div class="live-badge"><span class="live-dot"></span> AL AIRE</div>
+        <!-- CABECERA TIPO TV -->
+        <header class="tv-header">
+            <div class="channel-brand">
+                <img id="headerLogo" src="" alt="Logo" class="channel-logo-img">
+                <div class="channel-title-box">
+                    <h1 id="headerName">ZonaCafeteraTv</h1>
+                    <div class="live-tag"><span>●</span> AL AIRE</div>
                 </div>
             </div>
-            <button class="btn-icon" onclick="openPinModal()" title="Configuración">⚡</button>
+            <button class="btn-lightning" onclick="openPinModal()" title="Panel Secreto">⚡</button>
         </header>
 
-        <!-- REPRODUCTOR VIVO -->
-        <div class="player-box">
-            <div class="overlay-play" id="playOverlay">
-                <button class="btn-play-big" onclick="startStream()">▶ INICIAR SEÑAL</button>
+        <!-- REPRODUCTOR DE VIDEO -->
+        <div class="player-viewport">
+            <div class="play-gate" id="playGate">
+                <img id="gateLogo" src="" alt="Logo" class="gate-logo">
+                <h2 style="font-size: 1rem; margin-bottom: 12px; color: #f59e0b;" id="gateTitle">ZonaCafeteraTv</h2>
+                <button class="btn-big-play" onclick="startChannelStream()">▶ INICIAR SEÑAL</button>
             </div>
-            <video id="tvPlayer" playsinline controls></video>
+            <video id="mainVideoPlayer" playsinline controls></video>
         </div>
 
         <!-- CINTILLO INFERIOR -->
-        <div class="ticker-bar">
-            <div class="ticker-text" id="viewTicker">Bienvenidos a ZonaCafeteraTv. Disfruta de la mejor programación continua en alta definición. ☕📺</div>
+        <div class="ticker-container">
+            <div class="ticker-content" id="headerTicker">Bienvenidos a ZonaCafeteraTv. Disfruta de la mejor programación en vivo y en directo desde la nube. ☕📺</div>
         </div>
     </div>
 
-    <!-- MODAL PIN -->
-    <div class="modal-screen" id="pinModal">
-        <div class="modal-card">
-            <h3>Seguridad del Canal</h3>
-            <input type="password" id="pinInput" placeholder="••••" maxlength="4">
-            <div class="modal-btns">
-                <button class="btn-close-modal" onclick="closePinModal()">Cancelar</button>
-                <button class="btn-confirm" onclick="verifyPin()">Entrar</button>
+    <!-- MODAL DE ACCESO PIN -->
+    <div class="modal-overlay" id="pinModalOverlay">
+        <div class="modal-box">
+            <h3>Acceso Restringido</h3>
+            <input type="password" id="pinCodeInput" placeholder="••••" maxlength="4">
+            <div class="modal-actions">
+                <button class="btn-modal-cancel" onclick="closePinModal()">Cancelar</button>
+                <button class="btn-modal-ok" onclick="verifyAdminPin()">Entrar</button>
             </div>
         </div>
     </div>
 
-    <!-- PANEL DE CONTROL (ADMIN) -->
-    <div class="admin-screen" id="adminPanel">
-        <div class="admin-top">
-            <h2>Panel Admin - ZonaCafeteraTv</h2>
-            <button class="btn-logout" onclick="closeAdmin()">Cerrar Sesión</button>
+    <!-- PANEL DE CONTROL ADMINISTRATIVO -->
+    <div class="admin-dashboard" id="adminDashboardPanel">
+        <div class="admin-top-bar">
+            <h2>⚡ Panel Control ZonaCafeteraTv</h2>
+            <button class="btn-exit-admin" onclick="closeAdminPanel()">Cerrar Sesión</button>
         </div>
 
-        <div class="f-group">
+        <div class="onair-monitor">
+            Monitor Actual: <span id="monitorStatus">Reproduciendo en orden automático</span>
+        </div>
+
+        <div class="ctrl-group">
             <label>Nombre del Canal</label>
-            <input type="text" id="inputName" value="ZonaCafeteraTv">
+            <input type="text" id="cfgName" value="ZonaCafeteraTv">
         </div>
 
-        <div class="f-group">
-            <label>URL del Logo (Esquina)</label>
-            <input type="text" id="inputLogo" placeholder="https://.../logo.png">
+        <div class="ctrl-group">
+            <label>URL del Logo (Esquina superior)</label>
+            <input type="text" id="cfgLogo" placeholder="https://.../logo.png">
         </div>
 
-        <div class="f-group">
-            <label>Titulares en Pantalla (Cintillo)</label>
-            <textarea id="inputTicker" rows="2"></textarea>
+        <div class="ctrl-group">
+            <label>Titulares en Movimiento (Cintillo)</label>
+            <textarea id="cfgTicker" rows="2"></textarea>
         </div>
 
-        <div class="sec-title">Pistas / Videos en la Nube (Playlist)</div>
+        <div class="sec-label">Parrilla de Programación (Lista de Reproducción)</div>
         
-        <div class="add-track-box">
-            <input type="text" id="newTrackUrl" placeholder="Pegar URL de Cloudflare R2 (.mp4)">
-            <button class="btn-add" onclick="addTrack()">+ Añadir</button>
+        <div class="upload-row">
+            <input type="text" id="newMediaUrl" placeholder="Pegar enlace directo (.mp4 de Cloudflare R2)">
+            <button class="btn-action-blue" onclick="addMediaUrl()">+ URL</button>
         </div>
 
-        <div class="playlist-admin" id="playlistContainer">
-            <!-- Las pistas se cargan dinámicamente aquí -->
+        <div class="ctrl-group" style="margin-bottom: 8px;">
+            <label style="background:#1e293b; padding:6px; border-radius:6px; text-align:center; display:block; cursor:pointer; border:1px dashed #64748b;">
+                📁 Cargar Video/Audio desde este Dispositivo
+                <input type="file" id="localFilePicker" accept="video/*,audio/*" style="display:none;" onchange="handleLocalFile(this)">
+            </label>
         </div>
 
-        <div class="admin-actions">
-            <button class="btn-cancel-admin" onclick="closeAdmin()">Cancelar</button>
-            <button class="btn-save-admin" onclick="saveAdminConfig()">Guardar y Aplicar</button>
+        <div class="playlist-box" id="playlistItemsContainer">
+            <!-- Se cargan dinámicamente -->
+        </div>
+
+        <div class="admin-footer-btns">
+            <button class="btn-cancel-cfg" onclick="closeAdminPanel()">Cancelar</button>
+            <button class="btn-save-cfg" onclick="saveAndApplyConfig()">Guardar y Aplicar</button>
         </div>
     </div>
 
     <script>
+        // Logo profesional por defecto integrado de alta calidad
+        const DEFAULT_LOGO = "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=150&auto=format&fit=crop&q=80";
         const DEFAULT_PLAYLIST = [
             "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
             "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
         ];
 
-        let config = JSON.parse(localStorage.getItem('zonacafetera_tv_config')) || {
+        let config = JSON.parse(localStorage.getItem('zonacafetera_tv_v2')) || {
             name: "ZonaCafeteraTv",
-            logo: "https://via.placeholder.com/36",
-            ticker: "Bienvenidos a ZonaCafeteraTv. Disfruta de la mejor programación continua en alta definición. ☕📺",
+            logo: DEFAULT_LOGO,
+            ticker: "Bienvenidos a ZonaCafeteraTv. Disfruta de la mejor programación en vivo y en directo desde la nube. ☕📺",
             playlist: DEFAULT_PLAYLIST
         };
 
-        let currentTrackIndex = 0;
+        let currentPlayingIndex = 0;
 
         window.onload = function() {
-            applyConfig();
+            applyChannelConfig();
         };
 
-        function applyConfig() {
-            document.getElementById('viewName').innerText = config.name;
-            document.getElementById('viewLogo').src = config.logo;
-            document.getElementById('viewTicker').innerText = config.ticker;
+        function applyChannelConfig() {
+            document.getElementById('headerName').innerText = config.name;
+            document.getElementById('gateTitle').innerText = config.name;
+            document.getElementById('headerLogo').src = config.logo;
+            document.getElementById('gateLogo').src = config.logo;
+            document.getElementById('headerTicker').innerText = config.ticker;
 
-            // Cargar en inputs admin
-            document.getElementById('inputName').value = config.name;
-            document.getElementById('inputLogo').value = config.logo;
-            document.getElementById('inputTicker').value = config.ticker;
-            renderPlaylistAdmin();
+            // Llenar formulario admin
+            document.getElementById('cfgName').value = config.name;
+            document.getElementById('cfgLogo').value = config.logo;
+            document.getElementById('cfgTicker').value = config.ticker;
+            renderPlaylistManager();
         }
 
-        function startStream() {
-            const player = document.getElementById('tvPlayer');
+        function startChannelStream() {
+            const player = document.getElementById('mainVideoPlayer');
             if (config.playlist.length > 0) {
-                player.src = config.playlist[currentTrackIndex];
+                player.src = config.playlist[currentPlayingIndex];
                 player.play().then(() => {
-                    document.getElementById('playOverlay').style.display = 'none';
+                    document.getElementById('playGate').style.display = 'none';
                 }).catch(e => {
-                    alert("Por favor toca play en los controles del video si el navegador bloquea el autoplay.");
-                    document.getElementById('playOverlay').style.display = 'none';
+                    alert("Toca reproducir en los controles del video si el navegador bloquea el inicio.");
+                    document.getElementById('playGate').style.display = 'none';
                 });
 
-                // Auto-siguiente pista al terminar
+                // Secuencia continua automática al terminar cada pista
                 player.onended = function() {
-                    currentTrackIndex = (currentTrackIndex + 1) % config.playlist.length;
-                    player.src = config.playlist[currentTrackIndex];
+                    currentPlayingIndex = (currentPlayingIndex + 1) % config.playlist.length;
+                    player.src = config.playlist[currentPlayingIndex];
                     player.play();
+                    document.getElementById('monitorStatus').innerText = `Reproduciendo pista ${currentPlayingIndex + 1} de ${config.playlist.length}`;
                 };
             } else {
-                alert("No hay pistas configuradas en la lista.");
+                alert("No hay pistas cargadas en la parrilla de programación.");
             }
         }
 
-        // MODAL PIN
+        // CONTROL DE PIN SEGURO
         function openPinModal() {
-            document.getElementById('pinInput').value = '';
-            document.getElementById('pinModal').style.display = 'flex';
+            document.getElementById('pinCodeInput').value = '';
+            document.getElementById('pinModalOverlay').style.display = 'flex';
         }
         function closePinModal() {
-            document.getElementById('pinModal').style.display = 'none';
+            document.getElementById('pinModalOverlay').style.display = 'none';
         }
-        function verifyPin() {
-            const pin = document.getElementById('pinInput').value;
+        function verifyAdminPin() {
+            const pin = document.getElementById('pinCodeInput').value;
             if (pin === "1057") {
                 closePinModal();
-                document.getElementById('adminPanel').style.display = 'flex';
+                document.getElementById('adminDashboardPanel').style.display = 'flex';
             } else {
                 alert("PIN incorrecto");
-                document.getElementById('pinInput').value = '';
+                document.getElementById('pinCodeInput').value = '';
             }
         }
 
-        // ADMIN PANEL & PLAYLIST
-        function renderPlaylistAdmin() {
-            const container = document.getElementById('playlistContainer');
+        // GESTOR DE PLAYLIST Y ORDEN
+        function renderPlaylistManager() {
+            const container = document.getElementById('playlistItemsContainer');
             container.innerHTML = '';
             
             if (config.playlist.length === 0) {
-                container.innerHTML = '<div style="text-align:center; color:#64748b; padding:10px; font-size:0.75rem;">Sin pistas añadidas</div>';
+                container.innerHTML = '<div style="text-align:center; color:#64748b; padding:15px; font-size:0.75rem;">Sin archivos en la programación</div>';
                 return;
             }
 
-            config.playlist.forEach((track, index) => {
-                let div = document.createElement('div');
-                div.className = 'track-item';
-                div.innerHTML = `
-                    <div class="track-info"><b>${index + 1}.</b> ${track}</div>
-                    <div class="track-controls">
-                        <button onclick="moveTrack(${index}, -1)" title="Subir">↑</button>
-                        <button onclick="moveTrack(${index}, 1)" title="Bajar">↓</button>
-                        <button class="btn-del" onclick="deleteTrack(${index})" title="Eliminar">✕</button>
+            config.playlist.forEach((item, index) => {
+                let row = document.createElement('div');
+                row.className = 'track-row';
+                
+                let displayName = item.startsWith('blob:') ? `[Archivo Local] Pista ${index + 1}` : item;
+
+                row.innerHTML = `
+                    <div class="track-name"><b>${index + 1}.</b> ${displayName}</div>
+                    <div class="track-btns">
+                        <button onclick="movePlayItem(${index}, -1)" title="Subir">↑</button>
+                        <button onclick="movePlayItem(${index}, 1)" title="Bajar">↓</button>
+                        <button class="btn-remove" onclick="removePlayItem(${index})" title="Eliminar">✕</button>
                     </div>
                 `;
-                container.appendChild(div);
+                container.appendChild(row);
             });
         }
 
-        function addTrack() {
-            const urlInput = document.getElementById('newTrackUrl');
-            const url = urlInput.value.trim();
+        function addMediaUrl() {
+            const input = document.getElementById('newMediaUrl');
+            const url = input.value.trim();
             if (url) {
                 config.playlist.push(url);
-                urlInput.value = '';
-                renderPlaylistAdmin();
+                input.value = '';
+                renderPlaylistManager();
             } else {
-                alert("Ingresa un enlace válido");
+                alert("Ingresa una URL válida.");
             }
         }
 
-        function moveTrack(index, direction) {
-            const newIndex = index + direction;
-            if (newIndex >= 0 && newIndex < config.playlist.length) {
+        function handleLocalFile(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const localUrl = URL.createObjectURL(file);
+                config.playlist.push(localUrl);
+                renderPlaylistManager();
+                alert(`¡Archivo "${file.name}" cargado con éxito a la lista!`);
+            }
+        }
+
+        function movePlayItem(index, direction) {
+            const target = index + direction;
+            if (target >= 0 && target < config.playlist.length) {
                 const temp = config.playlist[index];
-                config.playlist[index] = config.playlist[newIndex];
-                config.playlist[newIndex] = temp;
-                renderPlaylistAdmin();
+                config.playlist[index] = config.playlist[target];
+                config.playlist[target] = temp;
+                renderPlaylistManager();
             }
         }
 
-        function deleteTrack(index) {
+        function removePlayItem(index) {
             config.playlist.splice(index, 1);
-            renderPlaylistAdmin();
+            renderPlaylistManager();
         }
 
-        function saveAdminConfig() {
-            config.name = document.getElementById('inputName').value;
-            config.logo = document.getElementById('inputLogo').value;
-            config.ticker = document.getElementById('inputTicker').value;
+        function saveAndApplyConfig() {
+            config.name = document.getElementById('cfgName').value;
+            config.logo = document.getElementById('cfgLogo').value || DEFAULT_LOGO;
+            config.ticker = document.getElementById('cfgTicker').value;
 
-            localStorage.setItem('zonacafetera_tv_config', JSON.stringify(config));
-            applyConfig();
-            document.getElementById('adminPanel').style.display = 'none';
-            alert("¡Configuración guardada y aplicada en tiempo real!");
+            localStorage.setItem('zonacafetera_tv_v2', JSON.stringify(config));
+            applyChannelConfig();
+            document.getElementById('adminDashboardPanel').style.display = 'none';
+            alert("¡Cambios aplicados correctamente! La señal continúa al aire.");
         }
 
-        function closeAdmin() {
-            document.getElementById('adminPanel').style.display = 'none';
+        function closeAdminPanel() {
+            document.getElementById('adminDashboardPanel').style.display = 'none';
         }
     </script>
 </body>
