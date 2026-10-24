@@ -1,244 +1,197 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>TV VIRTUAL DIGITAL - NUBE R2</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZonaCafeteraTv - Canal Virtual en Vivo</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: #0b0f19; color: #fff; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-  <style>
-    :root {
-      --bg: #030712;
-      --card-bg: #0b1329;
-      --border: #1e3a6d;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --c-green: #10b981;
-      --c-blue: #06b6d4;
-      --c-red: #ef4444;
-      --c-gold: #fbbf24;
-    }
+        /* VISTA ESPECTADOR */
+        #viewer-app { flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; height: 100%; }
+        .tv-header { background: rgba(11, 15, 25, 0.9); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f293d; z-index: 10; }
+        .logo-area { display: flex; align-items: center; gap: 10px; }
+        .logo-area img { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid #ffaa00; }
+        .channel-name { font-size: 1.1rem; font-weight: bold; color: #ffaa00; letter-spacing: 0.5px; }
+        
+        .lightning-btn { background: none; border: none; color: #6b7280; font-size: 1.2rem; cursor: pointer; padding: 5px; transition: color 0.3s; }
+        .lightning-btn:hover { color: #ffaa00; }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding: 6px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+        .player-container { flex: 1; background: #000; position: relative; display: flex; justify-content: center; align-items: center; }
+        video { width: 100%; height: 100%; object-fit: contain; }
+        
+        .play-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 5; transition: opacity 0.3s; }
+        .big-play-btn { background: #ffaa00; color: #000; border: none; padding: 15px 35px; font-size: 1.2rem; font-weight: bold; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(255,170,0,0.4); }
 
-    /* CONTENEDOR ESTILO APP MÓVIL */
-    .app-container {
-      width: 100%; max-width: 420px; background: #070c1b; border: 1px solid var(--border);
-      border-radius: 16px; padding: 10px; display: flex; flex-direction: column; gap: 8px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-    }
+        /* CINTILLO / TITULARES */
+        .ticker-wrap { background: #111827; color: #fff; padding: 10px 0; overflow: white-space; border-top: 2px solid #ffaa00; font-size: 0.9rem; }
+        .ticker { display: inline-block; white-space: nowrap; animation: marquee 25s linear infinite; }
+        @keyframes marquee { 0% { transform: translate3d(100%, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
 
-    /* BARRA SUPERIOR TV */
-    .tv-header {
-      display: flex; justify-content: space-between; align-items: center;
-      background: linear-gradient(90deg, #1e1b4b, #0f172a); padding: 8px 12px;
-      border-radius: 10px; border: 1px solid #4338ca;
-    }
-    .tv-title { font-size: 0.88rem; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 5px; }
-    .tv-live-badge { background: var(--c-red); color: #fff; font-size: 0.6rem; font-weight: 900; padding: 2px 6px; border-radius: 4px; animation: pulseLive 1.2s infinite alternate; }
-    @keyframes pulseLive { 0% { opacity: 1; } 100% { opacity: 0.5; } }
+        /* PANEL DE CONTROL SECRETO */
+        #admin-panel { position: absolute; inset: 0; background: #0f172a; z-index: 100; display: none; flex-direction: column; padding: 20px; overflow-y: auto; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        .admin-header h2 { color: #ffaa00; font-size: 1.3rem; }
+        .close-admin { background: #ef4444; color: #fff; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
-    /* PANTALLA VISTA PREVIA TV (VIDEO) */
-    .tv-screen-box {
-      width: 100%; aspect-ratio: 16/9; background: #000; border: 2px solid var(--border);
-      border-radius: 10px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center;
-    }
-    #virtualTvPlayer { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .tv-overlay-info {
-      position: absolute; bottom: 6px; left: 6px; right: 6px; background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; color: #fff;
-      display: flex; justify-content: space-between; align-items: center;
-    }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 5px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; background: #1e293b; border: 1px solid #334155; color: #fff; border-radius: 6px; font-size: 0.95rem; }
+        .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-save { background: #10b981; color: white; flex: 1; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .btn-cancel { background: #64748b; color: white; flex: 1; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-    /* PANEL DE CONTROL */
-    .control-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
-    .section-label { font-size: 0.65rem; font-weight: 900; color: var(--text-muted); text-transform: uppercase; }
-
-    .btn-action {
-      width: 100%; padding: 10px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.75rem;
-      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; color: #fff; text-align: center;
-    }
-    .btn-cloud { background: linear-gradient(135deg, #0284c7, #0369a1); border: 1px solid #38bdf8; }
-    .btn-local { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
-
-    /* LISTA DE REPRODUCCIÓN EN VIVO */
-    .playlist-container { max-height: 140px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
-    .playlist-item {
-      background: #101935; border: 1px solid #1e3a6d; border-radius: 6px; padding: 6px 8px;
-      font-size: 0.7rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
-    }
-    .playlist-item.active { border-color: var(--c-green); background: #064e3b33; font-weight: bold; }
-
-    /* MODALES */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px);
-      display: none; align-items: center; justify-content: center; z-index: 1000; padding: 12px;
-    }
-    .modal-box {
-      background: #0c1427; border: 1px solid #3b82f6; border-radius: 14px;
-      width: 100%; max-width: 385px; padding: 12px; display: flex; flex-direction: column; gap: 8px;
-    }
-    .form-group { display: flex; flex-direction: column; gap: 3px; }
-    .form-group label { font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
-    .form-group input { width: 100%; padding: 8px; background: #030712; border: 1px solid var(--border); border-radius: 6px; color: #fff; font-size: 0.8rem; outline: none; }
-  </style>
+        /* MODAL PIN */
+        #pin-modal { position: absolute; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; display: none; justify-content: center; align-items: center; }
+        .pin-box { background: #1e293b; padding: 30px; border-radius: 12px; width: 90%; max-width: 320px; text-align: center; border: 1px solid #334155; }
+        .pin-box h3 { margin-bottom: 15px; color: #ffaa00; }
+        .pin-box input { width: 100%; padding: 12px; text-align: center; font-size: 1.5rem; letter-spacing: 5px; background: #0f172a; border: 1px solid #475569; color: #fff; border-radius: 6px; margin-bottom: 15px; }
+        .pin-box button { width: 100%; padding: 10px; background: #ffaa00; color: #000; border: none; font-weight: bold; border-radius: 6px; cursor: pointer; }
+    </style>
 </head>
 <body>
 
-  <div class="app-container">
-    <!-- BARRA SUPERIOR -->
-    <div class="tv-header">
-      <div class="tv-title">📺 <span>TV DIGITAL VIRTUAL</span></div>
-      <div class="tv-live-badge">EN VIVO</div>
+    <!-- VISTA PRINCIPAL (ESPECTADOR) -->
+    <div id="viewer-app">
+        <header class="tv-header">
+            <div class="logo-area">
+                <img id="display-logo" src="https://via.placeholder.com/35" alt="Logo">
+                <span class="channel-name" id="display-title">ZonaCafeteraTv</span>
+            </div>
+            <button class="lightning-btn" onclick="openPinModal()">⚡</button>
+        </header>
+
+        <div class="player-container">
+            <div class="play-overlay" id="playOverlay">
+                <button class="big-play-btn" onclick="startChannel()">▶ VER SEÑAL EN VIVO</button>
+            </div>
+            <video id="tvPlayer" playsinline controls></video>
+        </div>
+
+        <div class="ticker-wrap">
+            <div class="ticker" id="display-ticker">¡Bienvenidos a ZonaCafeteraTv! Disfruta de la mejor programación en vivo y en directo desde la nube. ☕📺</div>
+        </div>
     </div>
 
-    <!-- PANTALLA VISTA PREVIA (TV VIRTUAL) -->
-    <div class="tv-screen-box">
-      <video id="virtualTvPlayer" autoplay playsinline controls></video>
-      <div class="tv-overlay-info">
-        <span id="currentTvTitle">Sin señal en línea</span>
-        <span id="tvTimer">0:00 / 0:00</span>
-      </div>
+    <!-- MODAL DE PIN SECRETO -->
+    <div id="pin-modal">
+        <div class="pin-box">
+            <h3>Seguridad Panel</h3>
+            <input type="password" id="pinInput" placeholder="••••" maxlength="4">
+            <button onclick="verifyPin()">Ingresar</button>
+            <button style="background:transparent; color:#94a3b8; margin-top:10px; border:none;" onclick="closePinModal()">Cancelar</button>
+        </div>
     </div>
 
-    <!-- PANEL DE CONTROL Y ACCIÓN -->
-    <div class="control-card">
-      <div class="section-label">Gestión de Contenido en la Nube R2</div>
-      
-      <button class="btn-action btn-cloud" onclick="openCloudModal()">
-        ☁️ AGREGAR DESDE CLOUDFLARE R2 (10 GB)
-      </button>
+    <!-- PANEL DE CONTROL (ADMIN) -->
+    <div id="admin-panel">
+        <div class="admin-header">
+            <h2>Panel de Control - ZonaCafeteraTv</h2>
+            <button class="close-admin" onclick="logoutAdmin()">Cerrar Sesión</button>
+        </div>
 
-      <div style="position: relative; overflow: hidden;">
-        <button class="btn-action btn-local">📂 CARGAR VIDEO O AUDIO LOCAL</button>
-        <input type="file" multiple accept="audio/*, video/*" onchange="handleLocalFiles(event)" style="position: absolute; inset:0; opacity:0; cursor:pointer;">
-      </div>
+        <div class="form-group">
+            <label>Nombre del Canal</label>
+            <input type="text" id="inputChannelName" value="ZonaCafeteraTv">
+        </div>
+
+        <div class="form-group">
+            <label>URL del Logo (Esquina)</label>
+            <input type="text" id="inputLogoUrl" placeholder="https://tu-nube.r2.dev/logo.png">
+        </div>
+
+        <div class="form-group">
+            <label>Enlace del Video en Vivo (Cloudflare R2 u otro)</label>
+            <input type="text" id="inputVideoUrl" placeholder="https://pub-xxxx.r2.dev/video-en-vivo.mp4">
+        </div>
+
+        <div class="form-group">
+            <label>Titulares en Movimiento (Cintillo)</label>
+            <textarea id="inputTickerText" rows="3">¡Bienvenidos a ZonaCafeteraTv! Disfruta de la mejor programación en vivo.</textarea>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn-cancel" onclick="logoutAdmin()">Cancelar</button>
+            <button class="btn-save" onclick="saveConfig()">Guardar y Aplicar</button>
+        </div>
     </div>
 
-    <!-- LISTA DE PROGRAMACIÓN (PROGRAMA ACTUAL) -->
-    <div class="control-card">
-      <div class="section-label">Parrilla de Programación en Cola</div>
-      <div class="playlist-container" id="tvPlaylistContainer">
-        <div style="color:var(--text-muted); font-size:0.68rem; text-align:center; padding:10px;">Agrega videos para iniciar la señal de TV.</div>
-      </div>
-    </div>
-  </div>
+    <script>
+        const DEFAULT_VIDEO = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
 
-  <!-- MODAL PARA AGREGAR DESDE CLOUDFLARE R2 -->
-  <div class="modal-overlay" id="cloudModal">
-    <div class="modal-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:6px;">
-        <span style="font-size:0.82rem; font-weight:900; color:var(--c-blue);">☁️ NUEVO VIDEO DESDE R2</span>
-        <button onclick="closeCloudModal()" style="background:none; border:none; color:#fff; font-size:1rem; cursor:pointer;">✕</button>
-      </div>
+        // Cargar datos guardados o por defecto
+        let config = JSON.parse(localStorage.getItem('zonacafetera_config')) || {
+            name: "ZonaCafeteraTv",
+            logo: "https://via.placeholder.com/35",
+            video: DEFAULT_VIDEO,
+            ticker: "¡Bienvenidos a ZonaCafeteraTv! Disfruta de la mejor programación en vivo y en directo desde la nube. ☕📺"
+        };
 
-      <div class="form-group">
-        <label>Nombre del Programa / Video</label>
-        <input type="text" id="r2VideoName" placeholder="Ej: Video Clip Musical">
-      </div>
+        window.onload = function() {
+            applyConfigToViewer();
+        };
 
-      <div class="form-group">
-        <label>Enlace Público R2 (.mp4 o .mp3)</label>
-        <input type="text" id="r2VideoUrl" placeholder="https://pub-d5a4e9...r2.dev/video.mp4">
-      </div>
+        function applyConfigToViewer() {
+            document.getElementById('display-title').innerText = config.name;
+            document.getElementById('display-logo').src = config.logo;
+            document.getElementById('display-ticker').innerText = config.ticker;
+            document.getElementById('tvPlayer').src = config.video;
 
-      <button class="btn-action" style="background:var(--c-green); margin-top:4px;" onclick="addVideoFromCloud()">
-        AGREGAR A LA PARRILLA DE TV
-      </button>
-    </div>
-  </div>
+            // Rellenar inputs del admin
+            document.getElementById('inputChannelName').value = config.name;
+            document.getElementById('inputLogoUrl').value = config.logo;
+            document.getElementById('inputVideoUrl').value = config.video;
+            document.getElementById('inputTickerText').value = config.ticker;
+        }
 
-  <script>
-    let tvPlaylist = [];
-    let currentTvIndex = 0;
-    const player = document.getElementById('virtualTvPlayer');
+        function startChannel() {
+            const player = document.getElementById('tvPlayer');
+            player.play().then(() => {
+                document.getElementById('playOverlay').style.opacity = '0';
+                setTimeout(() => { document.getElementById('playOverlay').style.display = 'none'; }, 300);
+            }).catch(e => {
+                alert("Toca reproducir en los controles del video si tu navegador bloquea el inicio automático.");
+                document.getElementById('playOverlay').style.display = 'none';
+            });
+        }
 
-    function openCloudModal() { document.getElementById('cloudModal').style.display = 'flex'; }
-    function closeCloudModal() { document.getElementById('cloudModal').style.display = 'none'; }
+        function openPinModal() {
+            document.getElementById('pinInput').value = '';
+            document.getElementById('pin-modal').style.display = 'flex';
+        }
 
-    function addVideoFromCloud() {
-      const name = document.getElementById('r2VideoName').value.trim();
-      const url = document.getElementById('r2VideoUrl').value.trim();
+        function closePinModal() {
+            document.getElementById('pin-modal').style.display = 'none';
+        }
 
-      if (!name || !url) {
-        alert("Completa el nombre y el enlace directo de Cloudflare R2.");
-        return;
-      }
+        function verifyPin() {
+            const pin = document.getElementById('pinInput').value;
+            if (pin === "1057") {
+                closePinModal();
+                document.getElementById('admin-panel').style.display = 'flex';
+            } else {
+                alert("PIN incorrecto");
+                document.getElementById('pinInput').value = '';
+            }
+        }
 
-      tvPlaylist.push({ name, url, isRemote: true });
-      document.getElementById('r2VideoName').value = '';
-      document.getElementById('r2VideoUrl').value = '';
-      closeCloudModal();
-      renderTvPlaylist();
+        function saveConfig() {
+            config.name = document.getElementById('inputChannelName').value;
+            config.logo = document.getElementById('inputLogoUrl').value;
+            config.video = document.getElementById('inputVideoUrl').value;
+            config.ticker = document.getElementById('inputTickerText').value;
 
-      if (tvPlaylist.length === 1 && player.paused) {
-        playTvIndex(0);
-      }
-    }
+            localStorage.setItem('zonacafetera_config', JSON.stringify(config));
+            applyConfigToViewer();
+            
+            document.getElementById('admin-panel').style.display = 'none';
+            alert("¡Cambios aplicados en tiempo real con éxito!");
+        }
 
-    function handleLocalFiles(e) {
-      const files = Array.from(e.target.files);
-      if (files.length === 0) return;
-
-      files.forEach(file => {
-        tvPlaylist.push({
-          name: file.name,
-          url: URL.createObjectURL(file),
-          isRemote: false
-        });
-      });
-
-      renderTvPlaylist();
-      if (tvPlaylist.length === files.length && player.paused) {
-        playTvIndex(0);
-      }
-    }
-
-    function playTvIndex(idx) {
-      if (tvPlaylist.length === 0 || !tvPlaylist[idx]) return;
-      currentTvIndex = idx;
-      const item = tvPlaylist[idx];
-
-      player.src = item.url;
-      player.load();
-      player.play().catch(e => console.log(e));
-
-      document.getElementById('currentTvTitle').innerText = `${idx + 1}. ${item.name}`;
-      renderTvPlaylist();
-    }
-
-    player.onended = () => {
-      currentTvIndex = (currentTvIndex + 1) % tvPlaylist.length;
-      playTvIndex(currentTvIndex);
-    };
-
-    player.ontimeupdate = () => {
-      if (!isNaN(player.duration)) {
-        const c = Math.floor(player.currentTime);
-        const d = Math.floor(player.duration);
-        const cM = Math.floor(c / 60), cS = (c % 60).toString().padStart(2, '0');
-        const dM = Math.floor(d / 60), dS = (d % 60).toString().padStart(2, '0');
-        document.getElementById('tvTimer').innerText = `${cM}:${cS} / ${dM}:${dS}`;
-      }
-    };
-
-    function renderTvPlaylist() {
-      const container = document.getElementById('tvPlaylistContainer');
-      container.innerHTML = '';
-
-      if (tvPlaylist.length === 0) {
-        container.innerHTML = '<div style="color:var(--text-muted); font-size:0.68rem; text-align:center; padding:10px;">Sin programación en parrilla.</div>';
-        return;
-      }
-
-      tvPlaylist.forEach((item, idx) => {
-        const div = document.createElement('div');
-        div.className = idx === currentTvIndex ? 'playlist-item active' : 'playlist-item';
-        div.innerHTML = `<span>${idx + 1}. ${item.name}</span> <small>${item.isRemote ? '☁️ Nube' : '💻 Local'}</small>`;
-        div.onclick = () => playTvIndex(idx);
-        container.appendChild(div);
-      });
-    }
-  </script>
+        function logoutAdmin() {
+            document.getElementById('admin-panel').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
